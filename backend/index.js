@@ -1,27 +1,21 @@
-
 require('dotenv').config();
 const express = require('express');
 const app = express();
-const PORT = process.env.PORT || 3001;
-
-const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = process.env.MONGODB_URI;
-const dbName = process.env.MONGODB_DB;
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  }
-});
+const { client, connectDB, dbName } = require('./db');
+const authRoutes = require('./auth');
+const { swaggerUi, swaggerSpec } = require('./swagger');
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/auth', authRoutes);
 
 app.get('/', async (req, res) => {
   try {
-    await client.connect();
-    await client.db(dbName).command({ ping: 1 });
+    const db = await connectDB();
+    await db.command({ ping: 1 });
     res.send('Backend is running and connected to MongoDB!');
   } catch (err) {
     res.status(500).send('Error connecting to MongoDB');

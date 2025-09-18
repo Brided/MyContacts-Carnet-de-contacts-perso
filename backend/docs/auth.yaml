@@ -1,0 +1,74 @@
+openapi: 3.0.0
+info:
+  title: MyContacts API
+  version: 1.0.0
+paths:
+  /auth/register:
+    post:
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: User registered
+        '400':
+          description: Missing email or password
+        '409':
+          description: User already exists
+        '500':
+          description: Registration error
+  /auth/login:
+    post:
+      summary: Login a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        '400':
+          description: Missing email or password
+        '401':
+          description: Invalid credentials
+        '500':
+          description: Login error
+  /auth/protected:
+    get:
+      summary: Example protected route
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Protected route accessed
+        '401':
+          description: Invalid or missing token
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

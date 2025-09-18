@@ -1,0 +1,16 @@
+openapi: 3.0.0
+info:
+  title: MyContacts API
+  version: 1.0.0
+  description: API documentation for MyContacts project
+servers:
+  - url: http://localhost:3000
+paths:
+  /:
+    get:
+      summary: Health check for backend and MongoDB connection
+      responses:
+        '200':
+          description: Backend is running and connected to MongoDB
+        '500':
+          description: Error connecting to MongoDB
